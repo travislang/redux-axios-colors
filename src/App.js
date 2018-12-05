@@ -25,12 +25,19 @@ class App extends Component {
   }
 
   // TODO: Rename to sendColorToServer
-  sendColorToRedux = () => {
+  sendColorToServer = () => {
     // Send the color to redux with an action type of ADD_COLOR
-    // const action = {type: 'ADD_COLOR', payload: this.state.color};
-    // this.props.dispatch(action);
     const body = {name: this.state.color, count: 1};
     //Post Body to /api/colors
+    axios.post('/api/colors', body)
+    .then( res => {
+        this.refreshData();
+        this.setState({
+            color: ''
+        })
+    }).catch( err => {
+        console.log( 'error in post', err );
+    });
   }
 
   deleteAllColors = () => {
@@ -38,8 +45,17 @@ class App extends Component {
     this.props.dispatch(action);
   }
 
-  refreshData() {
+  refreshData() {;
     //Get data from /api/colors
+    axios.get('/api/colors')
+    .then( res => {
+        console.log(res.data);
+        
+        const action = { type: 'SET_COLORS', payload: res.data }
+        this.props.dispatch(action)
+    }).catch( err => {
+        console.log( 'error in get', err );
+    })
   }
 
   componentDidMount() {
@@ -60,7 +76,7 @@ class App extends Component {
 
         <h3>Enter Color Here:</h3>
         <input onChange={this.handleColorChange} value={this.state.color} />
-        <button onClick={this.sendColorToRedux}>Submit</button>
+        <button onClick={this.sendColorToServer}>Submit</button>
         <button onClick={this.deleteAllColors}>Delete ALL Colors</button>
         <ColorList />
         

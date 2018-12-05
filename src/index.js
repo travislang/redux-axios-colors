@@ -25,6 +25,8 @@ const counterReducer = (state = 0, action) => {
 
 const secondReducer = (state = [], action) => {
     if(action.type === 'SET_COLORS') {
+        console.log('made it here:', action.payload);
+        
         return action.payload; // is the array of colors!
     }
     return state;
