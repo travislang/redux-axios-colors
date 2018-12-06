@@ -27,7 +27,8 @@ class App extends Component {
   // TODO: Rename to sendColorToServer
   sendColorToServer = () => {
     // Send the color to redux with an action type of ADD_COLOR
-    const body = {name: this.state.color, count: 1};
+    const body = {name: this.state.color, count: this.props.reduxStore.counterReducer};
+    
     //Post Body to /api/colors
     axios.post('/api/colors', body)
     .then( res => {
@@ -41,8 +42,10 @@ class App extends Component {
   }
 
   deleteAllColors = () => {
-    const action = {type: 'DELETE_COLORS'};
-    this.props.dispatch(action);
+    axios.delete('/api/colors')
+    .then( res => {
+        this.refreshData();
+    })
   }
 
   refreshData() {;
